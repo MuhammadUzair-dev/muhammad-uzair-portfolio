@@ -1418,7 +1418,10 @@ button {
   z-index: 2;
   width: 86%;
   max-width: 1200px;
-  margin: 0 auto
+  margin: 0 auto;
+  /* Query container so .hero-name can size itself as 9.2cqw — a percentage of
+     THIS box — which guarantees "Muhammad" never overflows at any viewport. */
+  container-type: inline-size;
 }
 
 .hero-eyebrow {
@@ -1445,7 +1448,11 @@ button {
 
 .hero-name {
   font-family: var(--display);
-  font-size: clamp(3.2rem, 9vw, 8rem);
+  font-size: clamp(3.2rem, 9vw, 8rem); /* fallback for browsers without container queries */
+  /* Measured: "Muhammad" in Syne ExtraBold is ≈9.77em wide (not ~0.8em/char).
+     9.2cqw = 9.2% of .hero-content's width keeps the whole word (incl. the "d")
+     inside with ~10% slack, on every screen from 320px phones to full desktops. */
+  font-size: clamp(1.6rem, 9.2cqw, 7rem);
   font-weight: 800;
   line-height: .88;
   letter-spacing: -5px;
@@ -1472,7 +1479,14 @@ button {
 
 .char-wrap {
   display: inline-block;
-  overflow: hidden
+  /* The `overflow: hidden` is needed for the slide-up reveal, but it also
+     shaves glyph ink that hangs past the advance box (the final "d" in
+     "Muhammad" + the negative letter-spacing pull it past the box edge).
+     Padding widens the clip box; equal negative margins cancel the extra
+     width so tracking/letter-spacing and the fit math stay identical. */
+  overflow: hidden;
+  padding: 0 .12em;
+  margin: 0 -.12em;
 }
 
 .char {
@@ -3340,9 +3354,8 @@ body.menu-open .chat-widget {
     letter-spacing: 2px;
   }
   .hero-name {
-    /* 11.5vw + max-width keeps "Muhammad" fully inside the container on narrow
-       phones — Syne ExtraBold glyphs are very wide (~0.8em per char). */
-    font-size: clamp(2rem, 11.5vw, 3.2rem);
+    /* Font-size is handled by the base 9.2cqw rule (scales with .hero-content,
+       so it always fits). Only spacing refinements live here. */
     letter-spacing: -2px;
     line-height: .92;
     max-width: 100%;
@@ -3543,11 +3556,8 @@ body.menu-open .chat-widget {
   }
 }
 
-/* --- Very small (<=360px) safety: shrink hero name further --- */
+/* --- Very small (<=360px) safety --- */
 @media (max-width: 360px) {
-  .hero-name {
-    font-size: clamp(1.85rem, 11vw, 2.4rem);
-  }
   .scramble-text {
     font-size: .5rem;
   }
