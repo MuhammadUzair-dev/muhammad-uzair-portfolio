@@ -1,5 +1,5 @@
-/* ================================================================
-   MUHAMMAD UZAIR — PORTFOLIO 2026  ·  V3 ELITE
+﻿/* ================================================================
+   MUHAMMAD UZAIR â€” PORTFOLIO 2026  Â·  V3 ELITE
    ================================================================ */
 
 :root {
@@ -2566,16 +2566,12 @@ html[data-theme='aurora'] .statement-text em .word {
   flex-direction: column;
   align-items: flex-end;
   gap: 16px;
-  /* CRITICAL: never let the widget's own box swallow taps meant for the page.
-     The FAB and the panel re-enable pointer events individually below. */
-  pointer-events: none;
 }
 
 .chat-fab {
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  pointer-events: auto; /* interactive — override .chat-widget block guard */
   border: 1px solid var(--border-h);
   background: linear-gradient(135deg, rgba(0, 212, 255, .12), rgba(168, 85, 247, .1));
   backdrop-filter: blur(16px);
@@ -2709,14 +2705,6 @@ html[data-theme='aurora'] .chat-fab {
 }
 
 .chat-panel {
-  /* Absolutely position the panel ABOVE the FAB so it never participates in the
-     widget's flex layout. Previously it was a flex child whose full height
-     stretched the fixed widget to ~90vh — shoving the FAB to the TOP of the
-     screen and covering the whole page with an invisible tap-blocking layer. */
-  position: absolute;
-  right: 0;
-  bottom: 76px; /* 60px FAB + 16px gap; adjusted per breakpoint below */
-  pointer-events: auto;
   width: min(360px, calc(100vw - 40px));
   height: min(540px, calc(100vh - 140px));
   border-radius: 20px;
@@ -3157,10 +3145,6 @@ html[data-theme='aurora'] .chat-fab {
     height: 54px;
   }
 
-  .chat-panel {
-    bottom: 70px; /* 54px FAB + 16px gap */
-  }
-
   .terminal-body {
     font-size: .68rem;
     padding: 16px 18px;
@@ -3198,7 +3182,7 @@ html[data-theme='aurora'] .chat-fab {
 }
 
 /* ================================================================
-   MOBILE OPTIMIZATION — Immersive Phone Experience (V3.2)
+   MOBILE OPTIMIZATION â€” Immersive Phone Experience (V3.2)
    ================================================================ */
 :root {
   --safe-top: env(safe-area-inset-top, 0px);
@@ -3341,7 +3325,7 @@ body.menu-open .chat-widget {
   }
   .hero-name {
     /* 11.5vw + max-width keeps "Muhammad" fully inside the container on narrow
-       phones — Syne ExtraBold glyphs are very wide (~0.8em per char). */
+       phones â€” Syne ExtraBold glyphs are very wide (~0.8em per char). */
     font-size: clamp(2rem, 11.5vw, 3.2rem);
     letter-spacing: -2px;
     line-height: .92;
@@ -3539,7 +3523,6 @@ body.menu-open .chat-widget {
     width: calc(100vw - 28px);
     height: calc(100vh - 130px - var(--safe-bottom));
     height: calc(100dvh - 130px - var(--safe-bottom));
-    bottom: 74px; /* 58px FAB + 16px gap */
   }
 }
 
@@ -3552,3 +3535,4 @@ body.menu-open .chat-widget {
     font-size: .5rem;
   }
 }
+
