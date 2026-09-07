@@ -116,8 +116,16 @@ document.addEventListener('DOMContentLoaded', () => {
       if (el) {
         // getBoundingClientRect() is reliable across layouts (offsetTop is
         // relative to offsetParent, which shifts inside flex containers).
-        const y = el.getBoundingClientRect().top + window.scrollY - navbar.offsetHeight - 12;
-        window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+        const navH = navbar ? navbar.offsetHeight : 0;
+        const y = Math.max(0, el.getBoundingClientRect().top + window.scrollY - navH - 12);
+        // Feature-detect smooth scrolling — some older mobile browsers/webviews
+        // no-op (or throw) on the options-object form, which after preventDefault
+        // leaves the tap completely dead (the Explore button, nav links, "Top").
+        if ('scrollBehavior' in document.documentElement.style) {
+          window.scrollTo({ top: y, behavior: 'smooth' });
+        } else {
+          window.scrollTo(0, y);
+        }
       }
     });
   });
@@ -488,6 +496,14 @@ document.addEventListener('DOMContentLoaded', () => {
     termInput.addEventListener('blur', () => termBody.closest('.terminal-window').classList.remove('focused'));
 
     termWindow.addEventListener('click', termFocus);
+    // Mobile taps: focus the hidden input reliably (click alone is flaky in some
+    // webviews), but ONLY for genuine taps — a swipe that scrolls the page must
+    // never open the keyboard. Track where the pointer started and compare.
+    let tTapX = 0, tTapY = 0;
+    termWindow.addEventListener('pointerdown', e => { tTapX = e.clientX; tTapY = e.clientY; }, { passive: true });
+    termWindow.addEventListener('pointerup', e => {
+      if (Math.hypot(e.clientX - tTapX, e.clientY - tTapY) < 14) termFocus();
+    }, { passive: true });
     termWindow.addEventListener('wheel', e => {
       if (window.innerWidth > 768) {
         termBody.scrollTop += e.deltaY;
@@ -579,24 +595,62 @@ document.addEventListener('DOMContentLoaded', () => {
   if (orbitTooltip) {
     const tipName = orbitTooltip.querySelector('.orbit-tooltip__name');
     const tipBar = orbitTooltip.querySelector('.orbit-tooltip__bar i');
+    // Hover never fires on touch screens, so orbit dots are dead on mobile.
+    // Bind hover only where it exists and add tap-to-toggle for everyone.
+    const canHover = window.matchMedia ? window.matchMedia('(hover: hover)').matches : true;
+
+    function positionTip(n) {
+      if (!skillOrbit) return;
+      const ob = skillOrbit.getBoundingClientRect();
+      const nb = n.getBoundingClientRect();
+      const cx = nb.left - ob.left + nb.width / 2;
+      const cy = nb.top - ob.top + nb.height / 2;
+      const tw = orbitTooltip.offsetWidth || 150;
+      // Clamp horizontally so the tooltip stays inside the (smallest) orbit —
+      // nodes orbit near the edge and on phones the whole orbit is ~280px.
+      const pad = tw / 2 + 16;
+      const lx = Math.min(Math.max(cx, pad), Math.max(pad, ob.width - pad));
+      orbitTooltip.style.left = lx + 'px';
+      orbitTooltip.style.top = cy + 'px';
+      // Nodes in the top half of the orbit: drop the tooltip BELOW the dot so
+      // it never runs off the top of the viewport on small screens.
+      orbitTooltip.style.transform = cy > 120
+        ? 'translate(-50%, calc(-100% - 14px))'
+        : 'translate(-50%, 18px)';
+    }
+
+    function showTip(n) {
+      tipName.textContent = n.dataset.skill + ' · ' + n.dataset.level + '%';
+      requestAnimationFrame(() => { tipBar.style.width = n.dataset.level + '%'; });
+      positionTip(n);
+      orbitTooltip.classList.add('show');
+      orbitTooltip.dataset.owner = n.dataset.skill;
+    }
+
+    function hideTip() {
+      orbitTooltip.classList.remove('show');
+      tipBar.style.width = '0%';
+      delete orbitTooltip.dataset.owner;
+    }
+
     orbitNodes.forEach(n => {
-      n.addEventListener('mouseenter', () => {
-        tipName.textContent = n.dataset.skill + ' · ' + n.dataset.level + '%';
-        // Anchor the tooltip to the hovered node (which orbits around)
-        requestAnimationFrame(() => { tipBar.style.width = n.dataset.level + '%'; });
-        if (skillOrbit) {
-          const ob = skillOrbit.getBoundingClientRect();
-          const nb = n.getBoundingClientRect();
-          orbitTooltip.style.left = (nb.left - ob.left + nb.width / 2) + 'px';
-          orbitTooltip.style.top = (nb.top - ob.top + nb.height / 2) + 'px';
-          orbitTooltip.style.transform = 'translate(-50%, calc(-100% - 14px))';
-        }
-        orbitTooltip.classList.add('show');
-      });
-      n.addEventListener('mouseleave', () => {
-        orbitTooltip.classList.remove('show');
-        tipBar.style.width = '0%';
-      });
+      // Desktop / devices with a real cursor
+      if (canHover) {
+        n.addEventListener('mouseenter', () => showTip(n));
+        n.addEventListener('mouseleave', hideTip);
+      } else {
+        // Touch / tap — hovering never fires on phones, so tapping a dot
+        // toggles its tooltip, and tapping anywhere else on the page dismisses it.
+        n.addEventListener('click', e => {
+          e.stopPropagation();
+          if (orbitTooltip.classList.contains('show') && orbitTooltip.dataset.owner === n.dataset.skill) hideTip();
+          else showTip(n);
+        });
+      }
+    });
+    // Tap anywhere outside the orbit to dismiss (desktop: harmless, hover manages it)
+    document.addEventListener('click', e => {
+      if (!e.target.closest('.orbit-node')) hideTip();
     });
   }
 

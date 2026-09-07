@@ -2558,6 +2558,7 @@ html[data-theme='aurora'] .statement-text em .word {
   position: fixed;
   bottom: 28px;
   right: 28px;
+  left: auto; /* always hug the bottom-right corner on mobile AND desktop */
   /* Keep the chat FAB/panel BELOW the navbar (z-index 1000) so it never covers
      the hamburger toggle or the open mobile menu panel on phones. */
   z-index: 999;
@@ -3191,6 +3192,11 @@ html[data-theme='aurora'] .chat-fab {
 }
 
 /* --- Prevent any accidental horizontal overflow --- */
+html,
+body {
+  overflow-x: hidden;
+}
+
 img,
 svg,
 canvas,
@@ -3374,6 +3380,55 @@ body.menu-open .chat-widget {
     transform: none;
     box-shadow: none;
   }
+  /* Touch-friendly interactions: kill the double-tap delay so taps register
+     instantly (Explore, terminal, orbit dots, chat, form buttons) */
+  .terminal-window,
+  .terminal-hidden-input,
+  .orbit-node,
+  .hero-cta,
+  .chat-fab,
+  .btn-send,
+  .wa-btn,
+  .nav-toggle {
+    touch-action: manipulation;
+  }
+  /* Bigger, easier-to-hit orbit dots on phones */
+  .orbit-node::before {
+    width: 56px;
+    height: 56px;
+  }
+  .orbit-node__dot {
+    width: 16px;
+    height: 16px;
+  }
+  /* Clear affordance that the terminal is tappable on phones (it uses an
+     invisible full-window input, so without this the screen looks dead) */
+  .terminal-window:not(.focused)::after {
+    content: 'tap & type';
+    position: absolute;
+    z-index: 3;
+    right: 14px;
+    bottom: 12px;
+    font-family: var(--mono);
+    font-size: .56rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: rgba(5, 5, 8, .72);
+    border: 1px solid var(--border-h);
+    padding: 4px 10px;
+    border-radius: 10px;
+    pointer-events: none;
+    animation: terminalBlink 2s ease infinite;
+  }
+  /* Native-looking form controls (no iOS inner shadow / rounded corners) */
+  .field input,
+  .field textarea,
+  .smart-match {
+    -webkit-appearance: none;
+    appearance: none;
+    border-radius: 0;
+  }
 }
 
 /* --- Small phones: tighten spacing & scale type --- */
@@ -3431,6 +3486,30 @@ body.menu-open .chat-widget {
   .wa-btn {
     justify-content: center;
     width: 100%;
+  }
+  /* Mobile contact form: comfortable tap targets, no iOS focus-zoom, tidy gaps */
+  .contact-form {
+    gap: 26px;
+  }
+  .field input,
+  .field textarea,
+  .smart-match {
+    width: 100%;
+    font-size: 1rem; /* 16px baseline stops iOS auto-zoom on focus */
+    min-height: 46px;
+    -webkit-appearance: none;
+    appearance: none;
+    border-radius: 0;
+    box-sizing: border-box;
+  }
+  .smart-match {
+    padding-right: 28px; /* keep the chevron clear of the selected label */
+  }
+  .contact-side {
+    gap: 28px;
+  }
+  .contact-avail {
+    flex-wrap: wrap;
   }
   .chat-widget {
     right: 14px;
