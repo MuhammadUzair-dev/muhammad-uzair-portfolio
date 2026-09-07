@@ -100,6 +100,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Lock background scroll while the mobile menu is open (immersive)
     document.body.classList.toggle('menu-open', opening);
   });
+  // Tapping anywhere outside the open menu closes it (mobile-friendly)
+  document.addEventListener('click', (e) => {
+    if (navLinks.classList.contains('open') && !navLinks.contains(e.target) && !navToggle.contains(e.target)) closeMenu();
+  });
   navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
   window.addEventListener('resize', () => { if (window.innerWidth > 768) closeMenu(); });
@@ -109,7 +113,12 @@ document.addEventListener('DOMContentLoaded', () => {
     a.addEventListener('click', e => {
       e.preventDefault();
       const el = document.querySelector(a.getAttribute('href'));
-      if (el) window.scrollTo({ top: el.offsetTop - navbar.offsetHeight - 10, behavior: 'smooth' });
+      if (el) {
+        // getBoundingClientRect() is reliable across layouts (offsetTop is
+        // relative to offsetParent, which shifts inside flex containers).
+        const y = el.getBoundingClientRect().top + window.scrollY - navbar.offsetHeight - 12;
+        window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+      }
     });
   });
 
@@ -293,14 +302,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ─── THEME SWITCHER ───
   const themeBtns = document.querySelectorAll('.theme-btn');
-  const savedTheme = localStorage.getItem('mu-theme');
+  // Guard: some in-app browsers / private modes throw on localStorage access.
+  let savedTheme = null;
+  try { savedTheme = localStorage.getItem('mu-theme'); } catch (err) { savedTheme = null; }
   if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
 
   themeBtns.forEach(btn => {
     btn.addEventListener('click', () => {
       const t = btn.dataset.theme;
       document.documentElement.setAttribute('data-theme', t);
-      localStorage.setItem('mu-theme', t);
+      try { localStorage.setItem('mu-theme', t); } catch (err) { /* ignore */ }
       themeBtns.forEach(b => b.classList.toggle('active', b === btn));
     });
   });
@@ -457,7 +468,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function termFocus() {
-      if (window.innerWidth > 768) termInput.focus();
+      // Focus on every interaction — desktop clicks AND mobile taps. On phones
+      // the hidden input covers the whole window, so a tap opens the keyboard.
+      try { termInput.focus(); } catch (err) { /* ignore */ }
     }
 
     // Live echo of the typed command before pressing Enter
@@ -503,7 +516,7 @@ document.addEventListener('DOMContentLoaded', () => {
           out = termCmd[base]();
         } else if (arg && ['dark', 'midnight', 'aurora'].includes(arg)) {
           document.documentElement.setAttribute('data-theme', arg);
-          localStorage.setItem('mu-theme', arg);
+          try { localStorage.setItem('mu-theme', arg); } catch (err) { /* ignore */ }
           themeBtns.forEach(b => b.classList.toggle('active', b.dataset.theme === arg));
           out = [`<span class="term-success">✓ Theme switched to "${arg}"</span>`];
         } else {

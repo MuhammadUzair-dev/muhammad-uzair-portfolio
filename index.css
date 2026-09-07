@@ -2460,6 +2460,7 @@ html[data-theme='aurora'] .statement-text em .word {
     width: 75%;
     max-width: 320px;
     height: 100vh;
+    height: 100dvh;
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -2557,7 +2558,9 @@ html[data-theme='aurora'] .statement-text em .word {
   position: fixed;
   bottom: 28px;
   right: 28px;
-  z-index: 9990;
+  /* Keep the chat FAB/panel BELOW the navbar (z-index 1000) so it never covers
+     the hamburger toggle or the open mobile menu panel on phones. */
+  z-index: 999;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -3284,6 +3287,16 @@ body.menu-open {
   overflow: hidden;
 }
 
+/* Hide the AI chat bubble while the mobile menu is open so it can never
+   overlap the hamburger/nav links (menu panel sits above the chat widget). */
+body.menu-open .chat-widget {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(14px) scale(.92);
+  pointer-events: none;
+  transition: opacity .3s ease, visibility .3s, transform .3s ease;
+}
+
 /* --- Immersive, centered hero on phones --- */
 @media (max-width: 520px) {
   .hero-content {
@@ -3291,6 +3304,7 @@ body.menu-open {
     flex-direction: column;
     align-items: center;
     text-align: center;
+    width: 92%;
   }
   .hero-eyebrow {
     justify-content: center;
@@ -3304,9 +3318,12 @@ body.menu-open {
     letter-spacing: 2px;
   }
   .hero-name {
-    font-size: clamp(2.3rem, 14vw, 3.4rem);
-    letter-spacing: -1.5px;
-    line-height: .9;
+    /* 11.5vw + max-width keeps "Muhammad" fully inside the container on narrow
+       phones — Syne ExtraBold glyphs are very wide (~0.8em per char). */
+    font-size: clamp(2rem, 11.5vw, 3.2rem);
+    letter-spacing: -2px;
+    line-height: .92;
+    max-width: 100%;
   }
   .hero-type {
     justify-content: center;
@@ -3426,13 +3443,14 @@ body.menu-open {
   .chat-panel {
     width: calc(100vw - 28px);
     height: calc(100vh - 130px - var(--safe-bottom));
+    height: calc(100dvh - 130px - var(--safe-bottom));
   }
 }
 
 /* --- Very small (<=360px) safety: shrink hero name further --- */
 @media (max-width: 360px) {
   .hero-name {
-    font-size: clamp(2rem, 12.5vw, 2.5rem);
+    font-size: clamp(1.85rem, 11vw, 2.4rem);
   }
   .scramble-text {
     font-size: .5rem;
