@@ -84,6 +84,7 @@ body {
 }
 
 .theme-btn {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -105,6 +106,75 @@ body {
   background: linear-gradient(135deg, var(--accent), var(--accent2));
   color: #050508;
   box-shadow: 0 0 18px rgba(0, 212, 255, .3);
+}
+
+/* Mode-name tooltips (shown on hover / keyboard focus) */
+.theme-btn::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: rgba(10, 10, 18, .94);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-h);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .45);
+  font-family: var(--mono);
+  font-size: .66rem;
+  font-weight: 500;
+  letter-spacing: .8px;
+  text-transform: uppercase;
+  color: var(--text);
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  z-index: 50;
+  transition: opacity .25s var(--ease), transform .25s var(--ease), visibility 0s linear .3s;
+}
+
+.theme-btn::before {
+  content: "";
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg) translateY(4px);
+  width: 8px;
+  height: 8px;
+  background: rgba(10, 10, 18, .94);
+  border-right: 1px solid var(--border-h);
+  border-bottom: 1px solid var(--border-h);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  z-index: 50;
+  transition: opacity .25s var(--ease), visibility 0s linear .3s;
+}
+
+.theme-btn:hover::after,
+.theme-btn:focus-visible::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+  transition: opacity .25s var(--ease), transform .25s var(--ease), visibility 0s linear 0s;
+}
+
+.theme-btn:hover::before,
+.theme-btn:focus-visible::before {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) rotate(45deg) translateY(0);
+  transition: opacity .25s var(--ease), visibility 0s linear 0s;
+}
+
+@media (hover: none) {
+  .theme-btn::after,
+  .theme-btn::before {
+    display: none;
+  }
 }
 
 /* ===== MOUSE-FOLLOWING SPOTLIGHT ===== */

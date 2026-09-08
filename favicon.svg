@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="16" fill="#050508"/>
+  <g transform="translate(-1 0)" fill="none" stroke="#ffffff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <!-- M -->
+    <path d="M13 18 L13 43 M13 18 L20.5 36 L28 18 M28 18 L28 43"/>
+    <!-- U -->
+    <path d="M35.5 18 L35.5 36 A6.5 6.5 0 0 0 48.5 36 L48.5 18"/>
+  </g>
+  <!-- period -->
+  <circle cx="51.5" cy="43" r="2.6" fill="#ffffff"/>
+  <!-- brand-blue accent dot -->
+  <circle cx="59" cy="43" r="3.2" fill="#00d4ff"/>
+</svg>
