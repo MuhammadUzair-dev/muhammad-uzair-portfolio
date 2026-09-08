@@ -432,9 +432,8 @@ document.addEventListener('DOMContentLoaded', () => {
         '<span class="term-purple">01 · Magnum AI</span> — AI agent integrating ML models into web environments <span class="term-output--dim">(Python · APIs · React)</span>',
         '<span class="term-purple">02 · oneup fits</span> — full-stack e-commerce, market-ready <span class="term-output--dim">(Node · Express · PostgreSQL · React)</span>',
         '<span class="term-purple">03 · FinTech Simulator</span> — secure banking simulation, strong OOP <span class="term-output--dim">(Python · OOP)</span>',
-        '<span class="term-purple">04 · Usaid Shaikh Portfolio</span> — custom UI/UX for a video pro <span class="term-output--dim">(UI/UX · Frontend)</span> <span class="term-output--dim">· coming soon</span>',
-        '<span class="term-purple">05 · Zenithflow</span> — real-time analytics platform with live dashboards <span class="term-output--dim">(React · Node · PostgreSQL)</span>',
-        '<span class="term-purple">06 · Aurastream</span> — AI-assisted media discovery experience <span class="term-output--dim">(Python · AI · REST APIs)</span>'
+        '<span class="term-purple">04 · Zenithflow</span> — real-time analytics platform with live dashboards <span class="term-output--dim">(React · Node · PostgreSQL)</span>',
+        '<span class="term-purple">05 · Aurastream</span> — AI-assisted media discovery experience <span class="term-output--dim">(Python · AI · REST APIs)</span>'
       ],
       contact: () => [
         '📧 <span class="term-accent">Email:</span> available via the contact form below ↓',
@@ -756,7 +755,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (has('best project', 'favorite', 'featured', 'magnum', 'showcase')) return "That's <b>Magnum AI</b> 🚀 — an AI agent integrating ML models into a functional web environment. Stack: <b>Python · APIs · React</b>.";
       if (has('e-commerce', 'ecommerce', 'oneup', 'shop')) return "<b>oneup fits</b> is a full-stack e-commerce build 🛍️ — deployed and market-ready. Stack: <b>Node.js · Express · PostgreSQL · React</b>.";
       if (has('fintech', 'banking', 'finance', 'simulator')) return "<b>FinTech Transaction Simulator</b> 💳 — secure banking simulation with strong OOP principles. Built in <b>Python</b>.";
-      if (has('usaid', 'video', 'ui/ux')) return "<b>Usaid Shaikh Portfolio</b> 🎬 — custom UI/UX for a video professional. Coming soon to the Work section!";
       if (has('zenith', 'zenithflow', 'analytics', 'dashboard')) return "<b>Zenithflow</b> 📈 — a real-time analytics platform that turns raw product data into clear, actionable dashboards. Stack: <b>React · Node.js · PostgreSQL</b>.";
       if (has('aura', 'aurastream', 'stream', 'media', 'music')) return "<b>Aurastream</b> 🌌 — an AI-assisted media discovery experience that learns from user behaviour to surface personalized content. Stack: <b>Python · AI · REST APIs</b>.";
       if (has('react')) return "Absolutely! ✅ Uzair works with <b>React</b> daily (~<b>92%</b>) — components, hooks, state management, SPAs.";
