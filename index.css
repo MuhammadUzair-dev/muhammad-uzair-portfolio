@@ -2073,6 +2073,94 @@ html[data-theme='aurora'] .big-text em .word {
   width: 56px
 }
 
+/* ===== BENTO CARD ACTION BUTTONS ===== */
+.bento-card__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 18px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .4s var(--ease), transform .4s var(--ease);
+}
+
+.bento-card:hover .bento-card__actions {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.bento-card__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 20px;
+  border-radius: 30px;
+  font-family: var(--mono);
+  font-size: .68rem;
+  font-weight: 500;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all .35s var(--ease);
+  position: relative;
+  z-index: 2;
+}
+
+.bento-card__btn--demo {
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #050508;
+  border: 1px solid transparent;
+  box-shadow: 0 0 20px rgba(0, 212, 255, .15);
+}
+
+.bento-card__btn--demo:hover {
+  box-shadow: 0 0 30px rgba(0, 212, 255, .35), 0 4px 20px rgba(0, 0, 0, .3);
+  transform: translateY(-2px) scale(1.03);
+  color: #050508;
+}
+
+.bento-card__btn--code {
+  background: rgba(255, 255, 255, .04);
+  color: var(--text2);
+  border: 1px solid var(--border-s);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.bento-card__btn--code:hover {
+  border-color: var(--border-h);
+  color: var(--accent);
+  background: rgba(0, 212, 255, .06);
+  transform: translateY(-2px);
+}
+
+.bento-card__btn svg {
+  flex-shrink: 0;
+  transition: transform .3s var(--ease);
+}
+
+.bento-card__btn:hover svg {
+  transform: scale(1.1);
+}
+
+.bento-card__btn--demo:hover svg {
+  transform: translateX(2px) scale(1.1);
+}
+
+@media (max-width: 640px) {
+  .bento-card__actions {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .bento-card__btn {
+    padding: 7px 14px;
+    font-size: .6rem;
+    gap: 5px;
+  }
+}
+
 /* ===== STATEMENT SECTION ===== */
 .statement-section {
   padding: clamp(100px, 16vh, 180px) 0;
